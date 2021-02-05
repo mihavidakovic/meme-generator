@@ -1,65 +1,41 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import {useEffect} from "react"
+import { Gluejar } from '@charliewilco/gluejar'
+import TextareaAutosize from 'react-textarea-autosize';
+import html2canvas from 'html2canvas';
+
 
 export default function Home() {
+
+  function download() {
+    console.log("downloading...")
+    html2canvas(document.querySelector('#meme'), {allowTaint: true}).then(function(canvas) {
+      var link = document.createElement('a');
+      link.download = 'my-image-name.jpeg';
+      link.href = canvas.toDataURL();
+      link.click();
+  });
+  
+  
+  }
+  
   return (
-    <div className={styles.container}>
-      <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to <a href="https://nextjs.org">Next.js!</a>
-        </h1>
-
-        <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
-        </p>
-
-        <div className={styles.grid}>
-          <a href="https://nextjs.org/docs" className={styles.card}>
-            <h3>Documentation &rarr;</h3>
-            <p>Find in-depth information about Next.js features and API.</p>
-          </a>
-
-          <a href="https://nextjs.org/learn" className={styles.card}>
-            <h3>Learn &rarr;</h3>
-            <p>Learn about Next.js in an interactive course with quizzes!</p>
-          </a>
-
-          <a
-            href="https://github.com/vercel/next.js/tree/master/examples"
-            className={styles.card}
-          >
-            <h3>Examples &rarr;</h3>
-            <p>Discover and deploy boilerplate example Next.js projects.</p>
-          </a>
-
-          <a
-            href="https://vercel.com/import?filter=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-          >
-            <h3>Deploy &rarr;</h3>
-            <p>
-              Instantly deploy your Next.js site to a public URL with Vercel.
-            </p>
-          </a>
+      <div className="min-h-screen flex flex-col items-center justify-center">
+        <div id="meme" className="bg-white w-full md:w-3/5 lg:w-2/5 px-4 pt-4 flex flex-col">
+          <div className="w-full border-none outline-none pb-2 md:pb-3 lg:pb-4 text-lg md:text-2xl lg:text-3xl font-sans font-thin" contentEditable>
+            opis memeta
+          </div>
+          <Gluejar onPaste={files => console.log(files)} onError={err => console.error(err)}>
+            {({ images }) =>
+              images.length > 0 &&
+              images.map(image => <img src={image} key={image} alt={`Pasted: ${image}`} />)
+            }
+          </Gluejar>
+          <img src="/watermark.png" />
         </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
-      </footer>
-    </div>
+        <div className="mt-6 bg-blue-600 text-white px-6 py-3 rounded cursor-pointer" onClick={() => download()}>
+          Shrani
+        </div>
+      </div>
   )
 }
